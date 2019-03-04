@@ -8,6 +8,7 @@ from stanfordnlp.models.common.conll import FIELD_TO_IDX as CONLLU_FIELD_TO_IDX
 
 multi_word_token_line = re.compile("([0-9]+)\-([0-9]+)")
 
+
 class Document:
 
     def __init__(self, text):
@@ -77,6 +78,7 @@ class Sentence:
                 idx = int(tok[CONLLU_FIELD_TO_IDX['id']])
                 if idx <= en:
                     self._tokens[-1].words.append(new_word)
+                    new_word.parent_token = self._tokens[-1]
                 else:
                     self.tokens.append(Token(tok, words=[new_word]))
 
@@ -134,10 +136,13 @@ class Sentence:
 
 class Token:
 
-    def __init__(self, token_entry, words=[]):
+    def __init__(self, token_entry, words=None):
         self._index = token_entry[CONLLU_FIELD_TO_IDX['id']]
         self._text = token_entry[CONLLU_FIELD_TO_IDX['word']]
-        self.words = words
+        if words is None:
+            self.words = []
+        else:
+            self.words = words
 
     @property
     def words(self):
