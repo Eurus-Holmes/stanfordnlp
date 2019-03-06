@@ -1,9 +1,14 @@
 """
 Tests that call a running CoreNLPClient.
 """
+import pytest
 import stanfordnlp.server as corenlp
 
+# set the marker for this module
+pytestmark = pytest.mark.travis
+
 TEXT = "Chris wrote a simple sentence that he parsed with Stanford CoreNLP.\n"
+
 
 def test_connect():
     with corenlp.CoreNLPClient() as client:
@@ -11,16 +16,19 @@ def test_connect():
         assert client.is_active
         assert client.is_alive()
 
+
 def test_annotate():
     with corenlp.CoreNLPClient(annotators="tokenize ssplit".split()) as client:
         ann = client.annotate(TEXT)
         assert corenlp.to_text(ann.sentence[0]) == TEXT[:-1]
+
 
 def test_update():
     with corenlp.CoreNLPClient(annotators="tokenize ssplit".split()) as client:
         ann = client.annotate(TEXT)
         ann = client.update(ann)
         assert corenlp.to_text(ann.sentence[0]) == TEXT[:-1]
+
 
 def test_tokensregex():
     with corenlp.CoreNLPClient(annotators='tokenize ssplit ner depparse'.split(), timeout=60000) as client:
@@ -42,6 +50,7 @@ def test_tokensregex():
                         }},
                 "length": 1
                 },]}
+
 
 def test_semgrex():
     with corenlp.CoreNLPClient(annotators='tokenize ssplit pos lemma ner depparse'.split(), timeout=60000) as client:
