@@ -8,17 +8,6 @@ import stanfordnlp
 from tests import *
 
 
-def setup_module(module):
-    """Set up resources for all tests in this module"""
-    safe_rm(EN_MODELS_DIR)
-    stanfordnlp.download('en', resource_dir=TEST_WORKING_DIR, force=True)
-
-
-def teardown_module(module):
-    """Clean up resources after tests complete"""
-    safe_rm(EN_MODELS_DIR)
-
-
 # data for testing
 EN_DOC = "Barack Obama was born in Hawaii.  He was elected president in 2008.  Obama attended Harvard."
 
@@ -119,7 +108,7 @@ EN_DOC_CONLLU_GOLD = """
 @pytest.fixture(scope="module")
 def processed_doc():
     """ Document created by running full English pipeline on a few sentences """
-    nlp = stanfordnlp.Pipeline(models_dir=TEST_WORKING_DIR)
+    nlp = stanfordnlp.Pipeline(models_dir=TEST_MODELS_DIR)
     return nlp(EN_DOC)
 
 

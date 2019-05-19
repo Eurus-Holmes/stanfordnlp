@@ -6,16 +6,6 @@ import stanfordnlp
 
 from tests import *
 
-def setup_module(module):
-    """Set up resources for all tests in this module"""
-    safe_rm(FR_MODELS_DIR)
-    stanfordnlp.download('fr', resource_dir=TEST_WORKING_DIR, force=True)
-
-
-def teardown_module(module):
-    """Clean up resources after tests complete"""
-    safe_rm(FR_MODELS_DIR)
-
 
 # mwt data for testing
 FR_MWT_SENTENCE = "Alors encore inconnu du grand public, Emmanuel Macron devient en 2014 ministre de l'Économie, de " \
@@ -80,7 +70,7 @@ word: .        		token parent:26-.
 
 
 def test_mwt():
-    pipeline = stanfordnlp.Pipeline(processors='tokenize,mwt', models_dir=TEST_WORKING_DIR, lang='fr')
+    pipeline = stanfordnlp.Pipeline(processors='tokenize,mwt', models_dir=TEST_MODELS_DIR, lang='fr')
     doc = pipeline(FR_MWT_SENTENCE)
     token_to_words = "\n".join(
         [f'token: {token.text.ljust(9)}\t\twords: {token.words}' for sent in doc.sentences for token in sent.tokens]
